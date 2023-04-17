@@ -26,9 +26,6 @@ public class Manager {
         }
 
 
-
-
-
     }
 
     private void DoAction()
@@ -53,7 +50,14 @@ public class Manager {
                 break;
 
             case Actions.Edit_Book:
-                this.ResponseOutPut = this.Add_Book(inputs);
+                this.ResponseOutPut = this.Edit_Book(inputs);
+                break;
+            case Actions.Remove_Book:
+                this.ResponseOutPut = this.Remove_Book(inputs);
+                break;
+
+            case Actions.Add_Thesis:
+                this.ResponseOutPut = this.Add_Thesis(inputs);
                 break;
 
             default:
@@ -163,6 +167,12 @@ public class Manager {
 
         String[] spliter = inputs.split("\\|");
 
+        if(spliter[4].equals("-"))
+            spliter[4] = String.valueOf(-1);
+
+        if(spliter[5].equals("-"))
+            spliter[4] = String.valueOf(-1);
+
         AddBookDto dto = new AddBookDto(
                 spliter[0] ,
                 spliter[1] ,
@@ -174,16 +184,88 @@ public class Manager {
                 spliter[7]
         );
 
+
+        if( !dto.CategoryId.equals("null") && !objectContainer.IsCateoryExist(dto.CategoryId))
+            return Response.Not_Found;
+
+
+        if(!objectContainer.IsLibraryExist(dto.LibId))
+            return Response.Not_Found;
+
+
         Library lib = null;
 
         for (int i = 0; i < objectContainer.libraries.size(); i++) {
 
-            if(dto.LibId.equals(objectContainer.libraries.get(i).getId()))
-            {
+            if (dto.LibId.equals(objectContainer.libraries.get(i).getId())) {
                 lib = objectContainer.libraries.get(i);
                 break;
             }
+        }
 
+        Book book = null;
+        for (int i = 0; i < lib.getBooks().size(); i++) {
+
+            if (dto.Id.equals(lib.getBooks().get(i).getId())) {
+                book = lib.getBooks().get(i);
+                break;
+            }
+        }
+        book.Update(dto);
+
+        return Response.Success;
+    }
+
+    private String Remove_Book(String inputs) {
+
+        String[] spliter = inputs.split("\\|");
+
+        RemoveBookDto dto = new RemoveBookDto(
+                spliter[0] ,
+                spliter[1]
+        );
+
+
+        if(!objectContainer.IsLibraryExist(dto.LibId))
+            return Response.Not_Found;
+
+
+        Library lib = null;
+
+        for (int i = 0; i < objectContainer.libraries.size(); i++) {
+
+            if (dto.LibId.equals(objectContainer.libraries.get(i).getId())) {
+                lib = objectContainer.libraries.get(i);
+                break;
+            }
+        }
+        if(lib == null)
+            return Response.Not_Found;
+
+        for (int i = 0; i < lib.getBooks().size(); i++) {
+
+            if (dto.Id.equals(lib.getBooks().get(i).getId())) {
+                lib.getBooks().remove(i);
+                return Response.Success;
+            }
+        }
+
+        return Response.Not_Found;
+    }
+
+    private String Add_Thesis(String inputs){
+
+        String[] spliter = inputs.split("\\|");
+
+        AddThesisDto dto = new AddThesisDto(
+                spliter[0] ,
+                spliter[1] ,
+                spliter[2] ,
+                spliter[3] ,
+                Integer.parseInt(spliter[4]),
+                spliter[5],
+                spliter[6]
+        );
 
 
         if( !dto.CategoryId.equals("null") && !objectContainer.IsCateoryExist(dto.CategoryId))
@@ -194,25 +276,29 @@ public class Manager {
         if(!objectContainer.IsLibraryExist(dto.LibId))
             return Response.Not_Found;
 
+
         Library lib = null;
         for (int i = 0; i < objectContainer.libraries.size(); i++) {
+
+            if(objectContainer.libraries.get(i).IsExistThesis(dto.Id))
+                return Response.dublicate_id ;
 
             if(dto.LibId.equals(objectContainer.libraries.get(i).getId()))
             {
                 lib = objectContainer.libraries.get(i);
-                break;
             }
 
         }
 
-        Book book = new Book(dto.Id , dto.Title , dto.Author, dto.Publisher , dto.PublishYear , dto.CategoryId , dto.Stock );
+        Thesis thesis = new Thesis(dto.Id , dto.Title , dto.StudentName , dto.ProfessorName , dto.DefenceDate , dto.CategoryId , lib.getId() );
 
-        Boolean result = lib.AddBook(book);
+        Boolean result = lib.AddThesis(thesis);
 
         if(result.equals(false))
             return Response.dublicate_id;
 
         return Response.Success;
     }
+
 }
 

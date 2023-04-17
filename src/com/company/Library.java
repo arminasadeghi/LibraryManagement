@@ -8,7 +8,17 @@ public class Library {
     private String Name;
     private int StablishYear;
     private int DeskNumber;
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
     private List<Book> books = new ArrayList<>();
+    private List<Thesis> thesis = new ArrayList<>();
 
     public Library()
     {
@@ -36,6 +46,28 @@ public class Library {
 
         return true ;
 
+    }
+
+    public boolean AddThesis(Thesis thesis)
+    {
+
+        if(this.IsExistThesis(thesis.getId()))
+            return false ;
+
+        this.thesis.add(thesis);
+
+        return true ;
+
+    }
+    public boolean IsExistThesis(String id)
+    {
+        Boolean isExistThesis = false;
+        for (int i = 0; i < this.thesis.size(); i++) {
+            if (this.thesis.get(i).getId().equals(id))
+                isExistThesis = true;
+        }
+
+        return isExistThesis;
     }
 
     public Library(String id, String name, int stablishYear, int deskNumber, String address) {

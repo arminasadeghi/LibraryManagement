@@ -5,6 +5,8 @@ class Actions {
     public static final String Add_Category = "add-category";
     public static final String Add_Book = "add-book";
     public static final String Edit_Book = "edit-book";
+    public static final String Remove_Book = "remove-book";
+    public static final String Add_Thesis = "add-thesis";
 
 
 
