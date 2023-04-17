@@ -9,6 +9,7 @@ public class Library {
     private int StablishYear;
     private int DeskNumber;
     private List<Book> books = new ArrayList<>();
+    private List<Thesis> thesis = new ArrayList<>();
 
     public Library()
     {
@@ -17,13 +18,24 @@ public class Library {
 
     public boolean IsExistBook(String id)
     {
-        Boolean isLibExist = false;
+        Boolean isBookExist = false;
         for (int i = 0; i < this.books.size(); i++) {
             if (this.books.get(i).getId().equals(id))
-                isLibExist = true;
+                isBookExist = true;
         }
 
-        return isLibExist;
+        return isBookExist;
+    }
+
+    public boolean IsExistThesis(String id)
+    {
+        Boolean isExistThesis = false;
+        for (int i = 0; i < this.thesis.size(); i++) {
+            if (this.thesis.get(i).getId().equals(id))
+               isExistThesis = true;
+        }
+
+        return isExistThesis;
     }
 
     public boolean AddBook(Book book)
@@ -33,6 +45,18 @@ public class Library {
             return false ;
 
         this.books.add(book);
+
+        return true ;
+
+    }
+
+    public boolean AddThesis(Thesis thesis)
+    {
+
+        if(this.IsExistThesis(thesis.getId()))
+            return false ;
+
+        this.thesis.add(thesis);
 
         return true ;
 

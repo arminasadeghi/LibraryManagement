@@ -6,7 +6,8 @@ public class Thesis {
     private String StudentName;
     private String ProfessorName;
     private int DefenceDate;
-    private Category Category;
+    private String CategoryId;
+    private String libraryId;
 
     public String getId() {
         return Id;
@@ -48,21 +49,16 @@ public class Thesis {
         DefenceDate = defenceDate;
     }
 
-    public com.company.Category getCategory() {
-        return Category;
-    }
 
-    public void setCategory(com.company.Category category) {
-        Category = category;
-    }
 
-    public com.company.Library getLibrary() {
-        return Library;
+    public Thesis(String id, String title, String studentName, String professorName, int defenceDate, String categoryId,
+            String libraryId) {
+        Id = id;
+        Title = title;
+        StudentName = studentName;
+        ProfessorName = professorName;
+        DefenceDate = defenceDate;
+        CategoryId = categoryId;
+        libraryId = libraryId;
     }
-
-    public void setLibrary(com.company.Library library) {
-        Library = library;
-    }
-
-    private Library Library;
 }
