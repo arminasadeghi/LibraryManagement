@@ -10,13 +10,17 @@ public class Student {
     private int BirthDate;
     private String Address;
 
-    public String getId() {
-        return Id;
+
+    public Student( String studentNumber, String firstName, String lastName, String password, String nationalCode, int birthDate, String address) {
+        StudentNumber = studentNumber;
+        FirstName = firstName;
+        LastName = lastName;
+        Password = password;
+        NationalCode = nationalCode;
+        BirthDate = birthDate;
+        Address = address;
     }
 
-    public void setId(String id) {
-        Id = id;
-    }
 
     public String getStudentNumber() {
         return StudentNumber;
@@ -72,5 +76,29 @@ public class Student {
 
     public void setAddress(String address) {
         Address = address;
+    }
+
+    public void Update(AddStudentDto input)
+    {
+        if(!input.StudentNumber.equals("-"))
+            this.setStudentNumber(input.StudentNumber);
+
+        if(!input.FirstName.equals("-"))
+            this.setFirstName(input.FirstName);
+
+        if(!input.LastName.equals("-"))
+            this.setLastName(input.LastName);
+
+        if(input.BirthDate != -1)
+            this.setBirthDate(input.BirthDate);
+
+        if(!input.Password.equals("-"))
+            this.setPassword(input.Password);
+
+        if(!input.NationalCode.equals("-"))
+            this.setNationalCode(input.NationalCode);
+
+        if(!input.Address.equals("-"))
+            this.setAddress(input.Address);
     }
 }

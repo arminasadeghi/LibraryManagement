@@ -59,6 +59,12 @@ public class Manager {
             case Actions.Add_Thesis:
                 this.ResponseOutPut = this.Add_Thesis(inputs);
                 break;
+            case Actions.Add_Student:
+                this.ResponseOutPut = this.Add_Student(inputs);
+                break;
+            case Actions.Edit_Student:
+                this.ResponseOutPut = this.Edit_Student(inputs);
+                break;
 
             default:
                 this.ResponseOutPut = "Invalid-Input" ;
@@ -296,6 +302,67 @@ public class Manager {
 
         if(result.equals(false))
             return Response.dublicate_id;
+
+        return Response.Success;
+    }
+
+    private String Add_Student(String inputs)
+    {
+        String[] spliter = inputs.split("\\|");
+
+
+        AddStudentDto dto = new AddStudentDto(
+                spliter[0] ,
+                spliter[1],
+                spliter[2],
+                spliter[3],
+                spliter[4],
+                Integer.parseInt(spliter[5]),
+                spliter[6]
+        );
+
+        if(this.objectContainer.IsStudentExist(dto.StudentNumber))
+            return Response.dublicate_id;
+
+        Student student = new Student(dto.StudentNumber,dto.FirstName,dto.LastName,dto.Password,dto.NationalCode,dto.BirthDate,dto.Address);
+        this.objectContainer.students.add(student);
+
+        return Response.Success;
+
+    }
+
+    private String Edit_Student(String inputs) {
+
+        String[] spliter = inputs.split("\\|");
+
+        if(spliter[5].equals("-"))
+            spliter[4] = String.valueOf(-1);
+
+        AddStudentDto dto = new AddStudentDto(
+                spliter[0] ,
+                spliter[1],
+                spliter[2],
+                spliter[3],
+                spliter[4],
+                Integer.parseInt(spliter[5]),
+                spliter[6]
+        );
+
+        if(!objectContainer.IsStudentExist(dto.StudentNumber))
+            return Response.Not_Found;
+
+
+        Student student = null;
+
+        for (int i = 0; i < objectContainer.students.size(); i++) {
+
+            if (dto.StudentNumber.equals(objectContainer.students.get(i).getStudentNumber())) {
+                student = objectContainer.students.get(i);
+                break;
+            }
+        }
+
+        student.Update(dto);
 
         return Response.Success;
     }

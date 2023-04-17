@@ -7,6 +7,7 @@ class ObjectContainer {
 
     List<Library> libraries = new ArrayList<>();
     List<Category>  categories  = new ArrayList<>();
+    List<Student>  students  = new ArrayList<>();
 
 
     public Boolean IsLibraryExist(String id) {
@@ -18,14 +19,25 @@ class ObjectContainer {
 
         return isLibExist;
     }
+
     public Boolean IsCateoryExist(String id) {
-        Boolean isLibExist = false;
+        Boolean isCatExist = false;
         for (int i = 0; i < this.categories.size(); i++) {
             if (this.categories.get(i).getId().equals(id))
-                isLibExist = true;
+                isCatExist = true;
         }
 
-        return isLibExist;
+        return isCatExist;
+    }
+
+    public Boolean IsStudentExist(String id) {
+        Boolean isStdExist = false;
+        for (int i = 0; i < this.students.size(); i++) {
+            if (this.students.get(i).getStudentNumber().equals(id))
+                isStdExist = true;
+        }
+
+        return isStdExist;
     }
 
 

@@ -7,6 +7,8 @@ class Actions {
     public static final String Edit_Book = "edit-book";
     public static final String Remove_Book = "remove-book";
     public static final String Add_Thesis = "add-thesis";
+    public static final String Add_Student = "add-student";
+    public static final String Edit_Student = "edit-student";
 
 
 
