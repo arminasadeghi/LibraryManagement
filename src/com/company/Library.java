@@ -20,6 +20,14 @@ public class Library {
     private List<Book> books = new ArrayList<>();
     private List<Thesis> thesis = new ArrayList<>();
 
+    public List<Thesis> getThesis() {
+        return thesis;
+    }
+
+    public void setThesis(List<Thesis> thesis) {
+        this.thesis = thesis;
+    }
+
     public Library()
     {
 

@@ -65,6 +65,26 @@ public class Manager {
             case Actions.Edit_Student:
                 this.ResponseOutPut = this.Edit_Student(inputs);
                 break;
+            case Actions.Remove_Student:
+                this.ResponseOutPut = this.Remove_Student(inputs);
+                break;
+            case Actions.Add_Staff:
+                this.ResponseOutPut = this.Add_Staff(inputs);
+                break;
+            case Actions.Edit_Staff:
+                this.ResponseOutPut = this.Edit_Staff(inputs);
+                break;
+            case Actions.Remove_Staff:
+                this.ResponseOutPut = this.Remove_Staff(inputs);
+                break;
+            case Actions.Edit_Thesis:
+                this.ResponseOutPut = this.Edit_Thesis(inputs);
+                break;
+            case Actions.Remove_Thesis:
+                this.ResponseOutPut = this.Remove_Thesis(inputs);
+                break;
+
+
 
             default:
                 this.ResponseOutPut = "Invalid-Input" ;
@@ -75,16 +95,14 @@ public class Manager {
 
     }
 
-    private boolean ShouldExit()
-    {
+    private boolean ShouldExit() {
         if(this.Input.equals(this.FinishStateMent))
             this.Exit = true ;
 
         return this.Exit ;
     }
 
-    private String Add_Library(String inputs)
-    {
+    private String Add_Library(String inputs) {
         String[] spliter = inputs.split("\\|");
 
         AddLibraryDto dto = new AddLibraryDto(
@@ -96,7 +114,7 @@ public class Manager {
         );
 
         if(this.objectContainer.IsLibraryExist(dto.Id))
-            return Response.dublicate_id;
+            return Response.duplicate_id;
 
         Library lib = new Library(dto.Id ,dto.Name , dto.StablishYear ,dto.DeskNumber , dto.Address);
         this.objectContainer.libraries.add(lib);
@@ -105,8 +123,7 @@ public class Manager {
 
     }
 
-    private String Add_Category(String inputs)
-    {
+    private String Add_Category(String inputs) {
         String[] spliter = inputs.split("\\|");
 
         AddCategoryDto dto = new AddCategoryDto(
@@ -115,7 +132,7 @@ public class Manager {
         );
 
         if(this.objectContainer.IsCateoryExist(dto.Id))
-            return Response.dublicate_id;
+            return Response.duplicate_id;
 
         Category category = new Category(dto.Id , dto.Name);
         this.objectContainer.categories.add(category);
@@ -164,7 +181,7 @@ public class Manager {
         Boolean result = lib.AddBook(book);
 
         if(result.equals(false))
-            return Response.dublicate_id;
+            return Response.duplicate_id;
 
         return Response.Success;
     }
@@ -177,7 +194,7 @@ public class Manager {
             spliter[4] = String.valueOf(-1);
 
         if(spliter[5].equals("-"))
-            spliter[4] = String.valueOf(-1);
+            spliter[5] = String.valueOf(-1);
 
         AddBookDto dto = new AddBookDto(
                 spliter[0] ,
@@ -287,7 +304,7 @@ public class Manager {
         for (int i = 0; i < objectContainer.libraries.size(); i++) {
 
             if(objectContainer.libraries.get(i).IsExistThesis(dto.Id))
-                return Response.dublicate_id ;
+                return Response.duplicate_id ;
 
             if(dto.LibId.equals(objectContainer.libraries.get(i).getId()))
             {
@@ -301,13 +318,12 @@ public class Manager {
         Boolean result = lib.AddThesis(thesis);
 
         if(result.equals(false))
-            return Response.dublicate_id;
+            return Response.duplicate_id;
 
         return Response.Success;
     }
 
-    private String Add_Student(String inputs)
-    {
+    private String Add_Student(String inputs) {
         String[] spliter = inputs.split("\\|");
 
 
@@ -322,7 +338,7 @@ public class Manager {
         );
 
         if(this.objectContainer.IsStudentExist(dto.StudentNumber))
-            return Response.dublicate_id;
+            return Response.duplicate_id;
 
         Student student = new Student(dto.StudentNumber,dto.FirstName,dto.LastName,dto.Password,dto.NationalCode,dto.BirthDate,dto.Address);
         this.objectContainer.students.add(student);
@@ -336,7 +352,7 @@ public class Manager {
         String[] spliter = inputs.split("\\|");
 
         if(spliter[5].equals("-"))
-            spliter[4] = String.valueOf(-1);
+            spliter[5] = String.valueOf(-1);
 
         AddStudentDto dto = new AddStudentDto(
                 spliter[0] ,
@@ -365,6 +381,201 @@ public class Manager {
         student.Update(dto);
 
         return Response.Success;
+    }
+
+    private String Remove_Student(String inputs) {
+
+        String[] spliter = inputs.split("\\|");
+
+        String StudentNumber = spliter[0];
+
+
+        if(!objectContainer.IsStudentExist(StudentNumber))
+            return Response.Not_Found;
+
+        for (int i = 0; i < objectContainer.students.size(); i++) {
+
+            if (StudentNumber.equals(objectContainer.students.get(i).getStudentNumber())) {
+                if(objectContainer.students.get(i).getLoanedBook().size() > 0 || objectContainer.students.get(i).getLoanedThesis().size() > 0)
+                    return Response.Success;
+                else {
+                    objectContainer.students.remove(i);
+                    return Response.Success;
+                }
+            }
+        }
+        return Response.Not_Found;
+    }
+
+    private String Add_Staff(String inputs) {
+        String[] spliter = inputs.split("\\|");
+
+
+        AddStaffDto dto = new AddStaffDto(
+                spliter[0] ,
+                spliter[1],
+                spliter[2],
+                spliter[3],
+                spliter[4],
+                Integer.parseInt(spliter[5]),
+                spliter[6]
+        );
+
+        if(this.objectContainer.IsStaffExist(dto.Code))
+            return Response.duplicate_id;
+
+        Staff staff = new Staff(dto.Code,dto.FirstName,dto.LastName,dto.PassWord,dto.NationalCode,dto.BirthDate,dto.Address);
+        this.objectContainer.staffs.add(staff);
+
+        return Response.Success;
+
+    }
+
+    private String Edit_Staff(String inputs) {
+
+        String[] spliter = inputs.split("\\|");
+
+        if(spliter[5].equals("-"))
+            spliter[5] = String.valueOf(-1);
+
+        AddStaffDto dto = new AddStaffDto(
+                spliter[0] ,
+                spliter[1],
+                spliter[2],
+                spliter[3],
+                spliter[4],
+                Integer.parseInt(spliter[5]),
+                spliter[6]
+        );
+
+        if(!objectContainer.IsStaffExist(dto.Code))
+            return Response.Not_Found;
+
+
+        Staff staff = null;
+
+        for (int i = 0; i < objectContainer.staffs.size(); i++) {
+
+            if (dto.Code.equals(objectContainer.staffs.get(i).getCode())) {
+                staff = objectContainer.staffs.get(i);
+                break;
+            }
+        }
+
+        staff.Update(dto);
+
+        return Response.Success;
+    }
+
+    private String Remove_Staff(String inputs) {
+
+        String[] spliter = inputs.split("\\|");
+
+        String Code = spliter[0];
+
+
+        if(!objectContainer.IsStaffExist(Code))
+            return Response.Not_Found;
+
+        for (int i = 0; i < objectContainer.staffs.size(); i++) {
+
+            if (Code.equals(objectContainer.staffs.get(i).getCode())) {
+                if(objectContainer.staffs.get(i).getLoanedBook().size() > 0 || objectContainer.staffs.get(i).getLoanedThesis().size() > 0)
+                    return Response.Success;
+                else {
+                    objectContainer.staffs.remove(i);
+                    return Response.Success;
+                }
+            }
+        }
+        return Response.Not_Found;
+    }
+
+    private String Edit_Thesis(String inputs) {
+
+        String[] spliter = inputs.split("\\|");
+
+        if(spliter[4].equals("-"))
+            spliter[4] = String.valueOf(-1);
+
+        AddThesisDto dto = new AddThesisDto(
+                spliter[0] ,
+                spliter[1] ,
+                spliter[2] ,
+                spliter[3] ,
+                Integer.parseInt(spliter[4]) ,
+                spliter[5] ,
+                spliter[6]
+        );
+
+
+        if( !dto.CategoryId.equals("null") && !objectContainer.IsCateoryExist(dto.CategoryId))
+            return Response.Not_Found;
+
+
+        if(!objectContainer.IsLibraryExist(dto.LibId))
+            return Response.Not_Found;
+
+
+        Library lib = null;
+
+        for (int i = 0; i < objectContainer.libraries.size(); i++) {
+
+            if (dto.LibId.equals(objectContainer.libraries.get(i).getId())) {
+                lib = objectContainer.libraries.get(i);
+                break;
+            }
+        }
+
+        Thesis thesis = null;
+        for (int i = 0; i < lib.getThesis().size(); i++) {
+
+            if (dto.Id.equals(lib.getThesis().get(i).getId())) {
+                thesis = lib.getThesis().get(i);
+                break;
+            }
+        }
+        thesis.Update(dto);
+
+        return Response.Success;
+    }
+
+    private String Remove_Thesis(String inputs) {
+
+        String[] spliter = inputs.split("\\|");
+
+        RemoveThesisDto dto = new RemoveThesisDto(
+                spliter[0] ,
+                spliter[1]
+        );
+
+
+        if(!objectContainer.IsLibraryExist(dto.LibId))
+            return Response.Not_Found;
+
+
+        Library lib = null;
+
+        for (int i = 0; i < objectContainer.libraries.size(); i++) {
+
+            if (dto.LibId.equals(objectContainer.libraries.get(i).getId())) {
+                lib = objectContainer.libraries.get(i);
+                break;
+            }
+        }
+
+        if(lib == null)
+            return Response.Not_Found;
+
+        for (int i = 0; i < lib.getThesis().size(); i++) {
+
+            if (dto.Id.equals(lib.getThesis().get(i).getId())) {
+                lib.getThesis().remove(i);
+                return Response.Success;
+            }
+        }
+
+        return Response.Not_Found;
     }
 
 }

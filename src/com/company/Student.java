@@ -1,7 +1,9 @@
 package com.company;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Student {
-    private String Id;
     private String StudentNumber;
     private String FirstName;
     private String LastName;
@@ -9,6 +11,25 @@ public class Student {
     private String NationalCode;
     private int BirthDate;
     private String Address;
+
+    public List<Book> getLoanedBook() {
+        return loanedBook;
+    }
+
+    public void setLoanedBook(List<Book> loanedBook) {
+        this.loanedBook = loanedBook;
+    }
+
+    public List<Thesis> getLoanedThesis() {
+        return LoanedThesis;
+    }
+
+    public void setLoanedThesis(List<Thesis> loanedThesis) {
+        LoanedThesis = loanedThesis;
+    }
+
+    private List<Book> loanedBook = new ArrayList<>();
+    private List<Thesis> LoanedThesis = new ArrayList<>();
 
 
     public Student( String studentNumber, String firstName, String lastName, String password, String nationalCode, int birthDate, String address) {
